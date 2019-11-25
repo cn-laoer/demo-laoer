@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>three.js</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        html,body {
+            width: 100%;
+            height: 100%;
+        }
+        canvas {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <script src="./js/three.js"></script>
+    <script>
+        let scene = new THREE.Scene(); //场景
+        let camera = new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,0.1,1000);//相机
+        let renderer = new THREE.WebGLRenderer();//渲染器
+        renderer.setSize(window.innerWidth,window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // 添加正方体
+        let zft = new THREE.BoxGeometry(1,1,1);
+        let ys = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+        let box = new THREE.Mesh( zft, ys);
+        scene.add( box );
+        
+        camera.position.z = 5;
+
+        let renders = function () {
+            requestAnimationFrame( renders );
+            box.rotation.x += 0.1;
+            box.rotation.y += 0.1;
+            renderer.render( scene, camera);
+        }
+        renders();
+
+    </script>
+</body>
+</html>
