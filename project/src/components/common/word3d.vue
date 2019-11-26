@@ -140,6 +140,9 @@ export default {
       this.mapChart.setOption(this.mapOption)
       this.option.globe.baseTexture = this.mapChart
       this.myChart.setOption(this.option);
+      setTimeout(() => {
+        that.hideClick();
+      }, 15000);
       this.myChart.getZr().on('click',function(){
       // this.myChart.on('click',function(e){
           that.hideClick();

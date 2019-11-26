@@ -70,6 +70,9 @@
         </div>
       </div>
       <div class="center">
+        <div class="center-bg">
+          <div class="bg"></div>
+        </div>
         <div class="city-box">
           <!-- <div class="city" id="dq" ref="dq" v-if="showMap==1"></div> -->
           <!-- <div class="city" id="china" ref="china" v-if="showMap==2"></div> -->
@@ -121,57 +124,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>太白公司</td>
-                    <td>12</td>
-                    <td>233</td>
-                    <td>1234</td>
-                    <td>
-                      <span class="rad-btn">报警记录</span>
-                      <span class="blue-btn">历史数据</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>太白公司</td>
-                    <td>12</td>
-                    <td>233</td>
-                    <td>1234</td>
-                    <td>
-                      <span class="rad-btn">报警记录</span>
-                      <span class="blue-btn">历史数据</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>太白公司</td>
-                    <td>12</td>
-                    <td>233</td>
-                    <td>1234</td>
-                    <td>
-                      <span class="rad-btn">报警记录</span>
-                      <span class="blue-btn">历史数据</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>太白公司</td>
-                    <td>12</td>
-                    <td>233</td>
-                    <td>1234</td>
-                    <td>
-                      <span class="rad-btn">报警记录</span>
-                      <span class="blue-btn">历史数据</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>太白公司</td>
-                    <td>12</td>
-                    <td>233</td>
-                    <td>1234</td>
-                    <td>
-                      <span class="rad-btn">报警记录</span>
-                      <span class="blue-btn">历史数据</span>
-                    </td>
-                  </tr>
-                  <tr>
+                  <tr v-for="(i,index) in tableLength" :key="index">
                     <td>太白公司</td>
                     <td>12</td>
                     <td>233</td>
@@ -413,7 +366,7 @@ import echarts from 'echarts';
 // import 'echarts/map/js/china.js'
 // import 'echarts-gl'
 import vdq from './common/word3d.vue'
-import vChina from './common/chinaMap.vue'
+import vChina from './common/city.vue'
 // import JSON from 'echarts/map/json/province/shanxi1.json';
 export default {
   name: 'home',
@@ -433,6 +386,7 @@ export default {
       nowWeek: '',
       echartsObj: '',
       chinaMapObj: '',
+      tableLength: 5,
       rhajOption: {
         color: ['#00ff00','#ffff00'],
         legend: {
@@ -877,116 +831,6 @@ export default {
           }
         ]
       },
-      mapChart:{},
-                //立体球形纹路
-      option :{
-        globe: {
-          globeRadius: 83,
-          baseTexture: '',//贴图 球形和平面的吻合
-          silent: true,
-          // environment: rgba(0,0,0,0), //背景
-          heightTexture: require("../assets/world.jpg"), //地球的整个纹路
-          shading: 'realistic',
-          light: {
-              main: {
-                  color: '#fff',
-                  intensity: 0,
-                  shadow: false,
-                  shadowQuality: 'high',
-                  alpha: 55,
-                  beta: 10
-              },
-              ambient: {
-                  color: '#fff',
-                  intensity: 1
-              }
-          },
-          postEffect: {
-              enable: false,
-              SSAO: {
-                  enable: true,
-                  radius: 10
-              }
-          },
-
-          //地球是否自己转动 autoRotate为true时自己转动
-          viewControl: {
-              autoRotate: true,
-              animationDurationUpdate: 2000,
-              targetCoord: ''
-          }
-        },
-        series: [
-          {
-              name: 'lines3D',
-              type: 'lines3D',
-              coordinateSystem: 'globe',
-              effect: {
-                  show: true,
-                  period: 2,
-                  trailWidth: 3,
-                  trailLength: 0.5,
-                  trailOpacity: 1,
-                  trailColor: '#0087f4'
-              },
-              blendMode: 'lighter',
-              lineStyle: {
-                  width: 1,
-                  color: '#0087f4',
-                  opacity: 0
-              },
-              data: [],
-              silent: false,
-
-          }
-        ]
-      },
-      //平面地球 主要是设置地球的样式
-      mapOption: {
-        backgroundColor: 'rgba(20,104,121,0.71)',//当和立体球形贴图是海洋的颜色
-        visualMap: {
-          show: false,
-          min: 0,
-          max: 100000
-        },
-        series: [
-          {
-            type: 'map',
-            map: 'world',
-            left: 0,
-            top: 0,
-            right: 0,
-            bottom: 0,
-            environment: 'rgba(0,0,0,0)',
-            boundingCoords: [
-              [-180, 90],
-              [180, -90]
-            ],
-            itemStyle: {
-              normal: {
-                borderWidth: 2,
-                borderColor: 'rgb(0,232,232)',//地球纹路的颜色
-                areaColor: {
-                  type: 'linear',
-                  x: 0,
-                  y: 0,
-                  x2: 0,
-                  y2: 1,
-                  //相邻每个板块 从上到下的颜色变化
-                  colorStops: [{
-                    offset: 0.2, color: 'rgb(0,48,62)' // 0% 处的颜色
-                    }, {
-                      offset: 0.8, color: 'rgba(0,179,188,0.8)' // 100% 处的颜色
-                    }
-                  ],
-                  global: false // 缺省为 false
-                },
-              }
-            }
-          }
-        ]
-      },
-      
     }
   },
   mounted() {
@@ -1015,6 +859,477 @@ export default {
     hmd.setOption(this.hmdOption);
     let hmd1 = echarts.init(document.getElementById('hmd1'));
     hmd1.setOption(this.hmdOption1);
+    setInterval(()=>{
+      // Math.ceil(Math.random()*100);  
+      rhaj.setOption({
+        color: ['#00ff00','#ffff00'],
+        legend: {
+          show: true,
+          top: '25px',
+          right: '15px',
+          textStyle: {
+            color: '#9ad3ed',
+            fontSize: 10
+          }
+        },
+        tooltip: {
+          trigger: 'axis',
+          showContent: false
+        },
+        xAxis: {
+          type: 'category',
+          splitNumber: '12',
+          data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月','8月','9月','10月','11月','12月'],
+          axisTick: {
+            show: false,
+            alignWithLabel: true
+          },
+          axisLine: {
+            show: false,
+            lineStyle: {
+              color: '#9ad3ed'
+            }
+          },
+          axisLabel: {
+            show: true,
+            interval: 0
+          }
+        },
+        yAxis: {
+          type: 'value',
+          axisLine: {
+            show: false,
+            lineStyle: {
+              color: '#9ad3ed'
+            }
+          },
+          splitLine: {
+            lineStyle: {
+              color: '#9ad3ed'
+            }
+          },
+        },
+        series: [
+          {
+            name:'安检总量',
+            type: 'line', smooth: true, seriesLayoutBy: 'row',
+            data: [Math.ceil(Math.random()*100), Math.ceil(Math.random()*100), Math.ceil(Math.random()*100), Math.ceil(Math.random()*100),
+             Math.ceil(Math.random()*100), Math.ceil(Math.random()*100), Math.ceil(Math.random()*100),
+              Math.ceil(Math.random()*100), Math.ceil(Math.random()*100), Math.ceil(Math.random()*100), Math.ceil(Math.random()*100), Math.ceil(Math.random()*100)],
+            areaStyle: {
+                normal: {
+                  color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                      offset: 0,
+                      color: '#00ff00'
+                  }, {
+                      offset: 1,
+                      color: '#06105a'
+                  }])
+                }
+            },
+          },
+          {
+            name:'已完成量',
+            type: 'line', smooth: true, seriesLayoutBy: 'row',
+            data: [Math.ceil(Math.random()*100), Math.ceil(Math.random()*100), Math.ceil(Math.random()*100), Math.ceil(Math.random()*100),
+             Math.ceil(Math.random()*100), Math.ceil(Math.random()*100), Math.ceil(Math.random()*100),
+              Math.ceil(Math.random()*100), Math.ceil(Math.random()*100), Math.ceil(Math.random()*100), Math.ceil(Math.random()*100), Math.ceil(Math.random()*100)],
+            areaStyle: {
+                normal: {
+                  color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                      offset: 0,
+                      color: '#ffff00'
+                  }, {
+                      offset: 1,
+                      color: '#06105a'
+                  }])
+                }
+            },
+          }
+        ],
+        grid: {
+          backgroundColor: 'rgba(255,255,255,0)',
+          borderColor: '#068fc2',
+          shadowColor: 'rgba(0, 0, 0, 0.5)',
+          left: '15%',
+          bottom: '18%'
+        }
+      });
+      hmd1.setOption({
+        title : {
+        },
+        tooltip : {
+          trigger: 'item',
+          formatter: "{a} <br/>{b} : {c} ({d}%)"
+        },
+        legend: {
+          orient: 'vertical',
+          left: 'left',
+          bottom: '20%',
+          data: ['销售1','销售2','销售3','销售4','销售5']
+        },
+        series : [
+          {
+            name: '访问来源',
+            type: 'pie',
+            radius : '55%',
+            center: ['50%', '60%'],
+            data:[
+              {value:Math.ceil(Math.random()*100), name:'销售1'},
+              {value:Math.ceil(Math.random()*100), name:'销售2'},
+              {value:Math.ceil(Math.random()*100), name:'销售3'},
+              {value:Math.ceil(Math.random()*100), name:'销售4'},
+              {value:Math.ceil(Math.random()*100), name:'销售5'}
+            ],
+            itemStyle: {
+              emphasis: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
+              }
+            }
+          }
+        ]
+      });
+    },1600)
+    setInterval(()=>{
+      this.tableLength = Math.ceil(Math.random())
+    },1200)
+    setInterval(()=>{
+      // rhaj.setOption(this.rhajOption);
+      fjm.setOption({
+        color: ['#00e9ff','#0031ff','#1b9530','#044712','#5e2a45','#af6328','#ef8f11'],
+        tooltip: {
+          trigger: 'item',
+        },
+        legend: {
+          show: false
+        },
+        series: [
+            {
+                name:'公司',
+                type:'pie',
+                selectedMode: 'single',
+                radius: ['20%', '30%'],
+
+                label: {
+                    normal: {
+                        position: 'inner'
+                    }
+                },
+                labelLine: {
+                    normal: {
+                        show: false
+                    }
+                },
+                data:[
+                    {value:Math.ceil(Math.random()*100), name:'直达'},
+                    {value:Math.ceil(Math.random()*100), name:'营销广告'},
+                    {value:Math.ceil(Math.random()*100), name:'搜索引擎'}
+                ]
+            },
+            {
+                name:'其他',
+                type:'pie',
+                radius: ['40%', '55%'],
+                labelLine: {
+                    normal: {
+                        show: false
+                    }
+                },
+                data:[
+                    {value:Math.ceil(Math.random()*100), name:'直达'},
+                    {value:Math.ceil(Math.random()*100), name:'邮件营销'},
+                    {value:Math.ceil(Math.random()*100), name:'联盟广告'},
+                    {value:Math.ceil(Math.random()*100), name:'视频广告'},
+                    {value:Math.ceil(Math.random()*100), name:'百度'},
+                    {value:Math.ceil(Math.random()*100), name:'谷歌'},
+                    {value:Math.ceil(Math.random()*100), name:'必应'},
+                    {value:Math.ceil(Math.random()*100), name:'其他'}
+                ]
+            },
+            {
+                name:'非居民',
+                type:'pie',
+                selectedMode: 'single',
+                radius: ['0%', '20%'],
+
+                label: {
+                    normal: {
+                        position: 'inner'
+                    }
+                },
+                labelLine: {
+                    normal: {
+                        show: false
+                    }
+                },
+                data:[
+                    {value:Math.ceil(Math.random()*100), name:'非居民'}
+                ]
+            },
+        ],
+        grid: {
+          backgroundColor: 'rgba(255,255,255,0)',
+          left: '15%',
+          bottom: '-5%'
+        }
+      });
+    },2200)
+    setInterval(()=>{
+      hmd.setOption({
+        title : {
+        },
+        tooltip : {
+          trigger: 'item',
+          formatter: "{a} <br/>{b} : {c} ({d}%)"
+        },
+        legend: {
+          orient: 'vertical',
+          left: 'left',
+          bottom: '20%',
+          data: ['销售1','销售2','销售3','销售4','销售5']
+        },
+        series : [
+          {
+            name: '访问来源',
+            type: 'pie',
+            radius : '55%',
+            center: ['50%', '60%'],
+            data:[
+              {value:Math.ceil(Math.random()*100), name:'销售1'},
+              {value:Math.ceil(Math.random()*100), name:'销售2'},
+              {value:Math.ceil(Math.random()*100), name:'销售3'},
+              {value:Math.ceil(Math.random()*100), name:'销售4'},
+              {value:Math.ceil(Math.random()*100), name:'销售5'}
+            ],
+            itemStyle: {
+              emphasis: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
+              }
+            }
+          }
+        ]
+      });
+      aqyh.setOption({
+        color: ['#ff00ff'],
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'cross',
+            crossStyle: {
+              color: '#999'
+            }
+          }
+        },
+        legend: {
+          show: true,
+          top: '30px',
+          right: '15px',
+          textStyle: {
+            color: '#9ad3ed',
+            fontSize: 10
+          },
+          data:['已处理隐患量','已发现隐患量']
+        },
+        xAxis: [
+          {
+            type: 'category',
+            data: ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],
+            axisPointer: {
+              type: 'shadow'
+            },
+            axisLabel: {
+              show: true,
+              interval: 0,
+              lineStyle: {
+                color: '#9ad3ed'
+              }
+            },
+            axisLine: {
+              show: true,
+              lineStyle: {
+                color: '#9ad3ed'
+              }
+            },
+            axisTick: {
+              show: false,
+              alignWithLabel: true
+            },
+          },
+        ],
+        yAxis: {
+          type: 'value',
+          axisLine: {
+            show: false,
+            lineStyle: {
+              color: '#9ad3ed'
+            }
+          },
+          axisTick: {
+            show: false,
+            alignWithLabel: true
+          },
+          splitLine: {
+            show: true,
+            lineStyle: {
+              color: '#9ad3ed'
+            }
+          },
+        },
+        series: [
+          {type: 'bar',
+            name:'已处理隐患量',
+            data:[Math.ceil(Math.random()*100), Math.ceil(Math.random()*100), Math.ceil(Math.random()*100),
+             Math.ceil(Math.random()*100), Math.ceil(Math.random()*100), Math.ceil(Math.random()*100), Math.ceil(Math.random()*100)
+             , Math.ceil(Math.random()*100), Math.ceil(Math.random()*100), Math.ceil(Math.random()*100), Math.ceil(Math.random()*100), Math.ceil(Math.random()*100)],
+            itemStyle: {
+              normal: {
+                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                    offset: 0,
+                    color: '#2d78f3'
+                }, {offset: 0.5, color: '#26b6fa'},{
+                    offset: 1,
+                    color: '#21e6ff'
+                }])
+              }
+            },
+          },
+          {
+            name:'已发现隐患量',
+            type:'bar',
+            data:[Math.ceil(Math.random()*100), Math.ceil(Math.random()*100), Math.ceil(Math.random()*100),
+             Math.ceil(Math.random()*100), Math.ceil(Math.random()*100), Math.ceil(Math.random()*100), Math.ceil(Math.random()*100)
+             , Math.ceil(Math.random()*100), Math.ceil(Math.random()*100), Math.ceil(Math.random()*100), Math.ceil(Math.random()*100), Math.ceil(Math.random()*100)],
+            itemStyle: {
+              normal: {
+                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                    offset: 0,
+                    color: '#fff795'
+                }, {offset: 0.5, color: '#fff33f'},{
+                    offset: 1,
+                    color: '#fff103'
+                }])
+              }
+            },
+          }
+        ],
+        grid: {
+          backgroundColor: 'rgba(255,255,255,0)',
+          borderColor: '#068fc2',
+          shadowColor: 'rgba(0, 0, 0, 0.5)',
+          left: '13%',
+          bottom: '20%'
+        }
+      });
+    },1900)
+    setInterval(()=>{
+      gxxc.setOption({
+        color: ['#ff00ff'],
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'cross',
+            crossStyle: {
+              color: '#999'
+            }
+          }
+        },
+        legend: {
+          show: true,
+          top: '25px',
+          right: '15px',
+          textStyle: {
+            color: '#9ad3ed',
+            fontSize: 10
+          },
+          data:['计划完成数','实际完成数']
+        },
+        xAxis: [
+          {
+            type: 'category',
+            data: ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],
+            axisPointer: {
+              type: 'shadow'
+            },
+            axisLabel: {
+              show: true,
+              interval: 0,
+              lineStyle: {
+                color: '#9ad3ed'
+              }
+            },
+            axisLine: {
+              show: true,
+              lineStyle: {
+                color: '#9ad3ed'
+              }
+            },
+            axisTick: {
+              show: false,
+              alignWithLabel: true
+            },
+          },
+        ],
+        yAxis: {
+          type: 'value',
+          axisLine: {
+            show: false,
+            lineStyle: {
+              color: '#9ad3ed'
+            }
+          },
+          axisTick: {
+            show: false,
+            alignWithLabel: true
+          },
+          splitLine: {
+            show: true,
+            lineStyle: {
+              color: '#9ad3ed'
+            }
+          },
+        },
+        series: [
+          {
+            name:'计划完成数',
+            type:'bar',
+            data:[Math.ceil(Math.random()*100), Math.ceil(Math.random()*100), Math.ceil(Math.random()*100),
+             Math.ceil(Math.random()*100), Math.ceil(Math.random()*100), Math.ceil(Math.random()*100), Math.ceil(Math.random()*100),
+              Math.ceil(Math.random()*100), Math.ceil(Math.random()*100), Math.ceil(Math.random()*100),
+               Math.ceil(Math.random()*100), Math.ceil(Math.random()*100)],
+            itemStyle: {
+              normal: {
+                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                    offset: 0,
+                    color: '#f49310'
+                }, {offset: 0.5, color: '#f49310'},{
+                    offset: 1,
+                    color: '#3a1152'
+                }])
+              }
+            },
+          },
+          {
+            name:'实际完成数',
+            type:'line',
+            data:[Math.ceil(Math.random()*100), Math.ceil(Math.random()*100), Math.ceil(Math.random()*100),
+             Math.ceil(Math.random()*100), Math.ceil(Math.random()*100), Math.ceil(Math.random()*100), Math.ceil(Math.random()*100),
+              Math.ceil(Math.random()*100), Math.ceil(Math.random()*100), Math.ceil(Math.random()*100),
+               Math.ceil(Math.random()*100), Math.ceil(Math.random()*100)]
+          }
+        ],
+        grid: {
+          backgroundColor: 'rgba(255,255,255,0)',
+          borderColor: '#068fc2',
+          shadowColor: 'rgba(0, 0, 0, 0.5)',
+          left: '13%',
+          bottom: '15%'
+        }
+      });
+    },2500)
     // this.initMap()
   },
   methods: {
