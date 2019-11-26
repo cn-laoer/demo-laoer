@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="home" id="home" :style="{'transformOrigin':'center top','transform':`scale(${scalseNum},${scalseNum})`}">
     <div class="header">
       <div class="nav-box left">
         <div class="nav active">入户安检情况</div>
@@ -71,9 +71,34 @@
       </div>
       <div class="center">
         <div class="city-box">
-          <div class="city" id="dq" ref="dq" v-if="showMap==1"></div>
-          <div class="city" id="china" ref="china" v-if="showMap==2"></div>
-          <div class="city" id="city" ref="city" v-if="showMap==3"></div>
+          <!-- <div class="city" id="dq" ref="dq" v-if="showMap==1"></div> -->
+          <!-- <div class="city" id="china" ref="china" v-if="showMap==2"></div> -->
+          <!-- <div class="city" id="city" ref="city" v-if="showMap==3"></div> -->
+          <vdq class="city" v-if="showMap==1" v-on:hideDqMap="hideDqMapFn"></vdq>
+          <vChina class="city" v-if="showMap==2"></vChina>
+        </div>
+        <div class="time-box">
+          <div>{{nowDate}}</div>
+          <div>{{nowTime}}  {{nowWeek}}</div>
+        </div>
+        <div class="city-select-box">
+          <div class="city-select">
+            <div class="item">陕西省</div> 
+            <div class="item">西安市</div>
+            <div class="san"></div> 
+          </div>
+          <div class="select">
+            <div class="item active">西安市</div>
+            <div class="item">铜川市</div>
+            <div class="item">宝鸡市</div>
+            <div class="item">咸阳市</div>
+            <div class="item">渭南市</div>
+            <div class="item">延安市</div>
+            <div class="item">汉中市</div>
+            <div class="item">榆林市</div>
+            <div class="item">安康市</div>
+            <div class="item">商洛市</div>
+          </div>
         </div>
         <div class="center-box">
           <div class="table-box left">
@@ -377,22 +402,35 @@
         </div>
       </div>
     </div>
+    <!-- <div class="open" @click="scalsePage()"></div> -->
+    <div class="open" @click="toggleFullScreen($event)"></div>
   </div>
 </template>
 
 <script>
 import echarts from 'echarts';
-import 'echarts/map/js/world.js'
-import 'echarts/map/js/china.js'
-import 'echarts-gl'
+// import 'echarts/map/js/world.js'
+// import 'echarts/map/js/china.js'
+// import 'echarts-gl'
+import vdq from './common/word3d.vue'
+import vChina from './common/chinaMap.vue'
 // import JSON from 'echarts/map/json/province/shanxi1.json';
 export default {
   name: 'home',
   props: {
   },
+  components: {
+    vdq,
+    vChina
+  },
   data() {
     return {
+      isFullscreen:true,
       showMap: 1,
+      scalseNum: 1,
+      nowDate: '',
+      nowTime: '',
+      nowWeek: '',
       echartsObj: '',
       chinaMapObj: '',
       rhajOption: {
@@ -842,115 +880,129 @@ export default {
       mapChart:{},
                 //立体球形纹路
       option :{
-      globe: {
-        globeRadius: 83,
-        baseTexture: '',//贴图 球形和平面的吻合
-        silent: true,
-        // environment: rgba(0,0,0,0), //背景
-        heightTexture: require("../assets/world.jpg"), //地球的整个纹路
-        shading: 'realistic',
-        light: {
-            main: {
-                color: '#fff',
-                intensity: 0,
-                shadow: false,
-                shadowQuality: 'high',
-                alpha: 55,
-                beta: 10
-            },
-            ambient: {
-                color: '#fff',
-                intensity: 1
-            }
-        },
-        postEffect: {
-            enable: false,
-            SSAO: {
-                enable: true,
-                radius: 10
-            }
-        },
+        globe: {
+          globeRadius: 83,
+          baseTexture: '',//贴图 球形和平面的吻合
+          silent: true,
+          // environment: rgba(0,0,0,0), //背景
+          heightTexture: require("../assets/world.jpg"), //地球的整个纹路
+          shading: 'realistic',
+          light: {
+              main: {
+                  color: '#fff',
+                  intensity: 0,
+                  shadow: false,
+                  shadowQuality: 'high',
+                  alpha: 55,
+                  beta: 10
+              },
+              ambient: {
+                  color: '#fff',
+                  intensity: 1
+              }
+          },
+          postEffect: {
+              enable: false,
+              SSAO: {
+                  enable: true,
+                  radius: 10
+              }
+          },
 
-        //地球是否自己转动 autoRotate为true时自己转动
-        viewControl: {
-            autoRotate: true,
-            animationDurationUpdate: 2000,
-            targetCoord: ''
-        }
-      },
-      series: [
-        {
-            name: 'lines3D',
-            type: 'lines3D',
-            coordinateSystem: 'globe',
-            effect: {
-                show: true,
-                period: 2,
-                trailWidth: 3,
-                trailLength: 0.5,
-                trailOpacity: 1,
-                trailColor: '#0087f4'
-            },
-            blendMode: 'lighter',
-            lineStyle: {
-                width: 1,
-                color: '#0087f4',
-                opacity: 0
-            },
-            data: [],
-            silent: false,
-
-        }
-      ]
-      },
-      //平面地球 主要是设置地球的样式
-        mapOption: {
-        backgroundColor: 'rgba(20,104,121,0.71)',//当和立体球形贴图是海洋的颜色
-        visualMap: {
-        show: false,
-        min: 0,
-        max: 100000
+          //地球是否自己转动 autoRotate为true时自己转动
+          viewControl: {
+              autoRotate: true,
+              animationDurationUpdate: 2000,
+              targetCoord: ''
+          }
         },
         series: [
-        {
-        type: 'map',
-        map: 'world',
-        left: 0,
-        top: 0,
-        right: 0,
-        bottom: 0,
-        environment: 'rgba(0,0,0,0)',
-        boundingCoords: [
-        [-180, 90],
-        [180, -90]
-        ],
-        itemStyle: {
-        normal: {
-            borderWidth: 2,
-            borderColor: 'rgb(0,232,232)',//地球纹路的颜色
-            areaColor: {
-                type: 'linear',
-                x: 0,
-                y: 0,
-                x2: 0,
-                y2: 1,
-                //相邻每个板块 从上到下的颜色变化
-                colorStops: [{
-                    offset: 0.2, color: 'rgb(0,48,62)' // 0% 处的颜色
-                }, {
-                    offset: 0.8, color: 'rgba(0,179,188,0.8)' // 100% 处的颜色
-                }],
-                global: false // 缺省为 false
-            },
-        }
-        }
-        }
+          {
+              name: 'lines3D',
+              type: 'lines3D',
+              coordinateSystem: 'globe',
+              effect: {
+                  show: true,
+                  period: 2,
+                  trailWidth: 3,
+                  trailLength: 0.5,
+                  trailOpacity: 1,
+                  trailColor: '#0087f4'
+              },
+              blendMode: 'lighter',
+              lineStyle: {
+                  width: 1,
+                  color: '#0087f4',
+                  opacity: 0
+              },
+              data: [],
+              silent: false,
+
+          }
         ]
       },
-          
+      //平面地球 主要是设置地球的样式
+      mapOption: {
+        backgroundColor: 'rgba(20,104,121,0.71)',//当和立体球形贴图是海洋的颜色
+        visualMap: {
+          show: false,
+          min: 0,
+          max: 100000
+        },
+        series: [
+          {
+            type: 'map',
+            map: 'world',
+            left: 0,
+            top: 0,
+            right: 0,
+            bottom: 0,
+            environment: 'rgba(0,0,0,0)',
+            boundingCoords: [
+              [-180, 90],
+              [180, -90]
+            ],
+            itemStyle: {
+              normal: {
+                borderWidth: 2,
+                borderColor: 'rgb(0,232,232)',//地球纹路的颜色
+                areaColor: {
+                  type: 'linear',
+                  x: 0,
+                  y: 0,
+                  x2: 0,
+                  y2: 1,
+                  //相邻每个板块 从上到下的颜色变化
+                  colorStops: [{
+                    offset: 0.2, color: 'rgb(0,48,62)' // 0% 处的颜色
+                    }, {
+                      offset: 0.8, color: 'rgba(0,179,188,0.8)' // 100% 处的颜色
+                    }
+                  ],
+                  global: false // 缺省为 false
+                },
+              }
+            }
+          }
+        ]
+      },
+      
     }
   },
   mounted() {
+    //计算缩放比例
+    // this.resize_window();
+    // window.addEventListener('resize', () => {
+    //     this.resize_window();
+    // });
+    let _that=this;
+    window.onresize = function() {
+      if (!_that.checkFull()) {
+        //要执行的动作
+        _that.isFullscreen=true;
+      }
+    }
+    this.setTimer();
     let rhaj = echarts.init(document.getElementById('rhaj'));
     rhaj.setOption(this.rhajOption);
     let gxxc = echarts.init(document.getElementById('gxxc'));
@@ -963,24 +1015,44 @@ export default {
     hmd.setOption(this.hmdOption);
     let hmd1 = echarts.init(document.getElementById('hmd1'));
     hmd1.setOption(this.hmdOption1);
-    this.initMap()
+    // this.initMap()
   },
   methods: {
-    initMap(){
-      const that = this;
-      this.mapChart = echarts.init(document.createElement('canvas'));
-      //获取容器并对其初始化
-      // this.myChart = echarts.init(document.getElementById('dq'))
-      this.myChart = echarts.init(this.$refs.dq)
-      //将平面地球和立体球形的纹路重叠
-      this.mapChart.setOption(this.mapOption)
-      this.option.globe.baseTexture = this.mapChart
-      this.myChart.setOption(this.option);
-      this.myChart.getZr().on('click',function(e){
-      // this.myChart.on('click',function(e){
-        alert(JSON.stringify(e));
-        that.chinaMap();
-      });
+    // initMap(){
+    //   const that = this;
+    //   this.mapChart = echarts.init(document.createElement('canvas'));
+    //   //获取容器并对其初始化
+    //   // this.myChart = echarts.init(document.getElementById('dq'))
+    //   this.myChart = echarts.init(this.$refs.dq)
+    //   //将平面地球和立体球形的纹路重叠
+    //   this.mapChart.setOption(this.mapOption)
+    //   this.option.globe.baseTexture = this.mapChart
+    //   this.myChart.setOption(this.option);
+    //   this.myChart.getZr().on('click',function(e){
+    //   // this.myChart.on('click',function(e){
+    //     alert(JSON.stringify(e));
+    //     that.chinaMap();
+    //   });
+    // },
+    //计算缩放比例
+    // resize_window() {
+    //   let w_height = Number(document.documentElement.clientHeight / 720);
+    //   this.scalseNum = w_height;
+    // },
+    setTimer() {
+      setInterval(()=>{
+        let now = new Date();
+        var year=now.getFullYear(); 
+        var month=now.getMonth()+1<10?'0'+(now.getMonth()+1):now.getMonth()+1; 
+        var date=now.getDate()<10?'0'+now.getDate():now.getDate(); 
+        var hour=now.getHours()<10?'0'+now.getHours():now.getHours();
+        var minute=now.getMinutes()<10?'0'+now.getMinutes():now.getMinutes();
+        var week=now.getDay();
+        // var second=now.getSeconds();
+        this.nowDate = year+'年'+month+'月'+date+'日';
+        this.nowTime = hour+':'+minute;
+        this.nowWeek = '星期'+'日一二三四五六'.charAt(week);
+      },1000);
     },
     chinaMap() {
       this.showMap = 2;
@@ -1029,7 +1101,51 @@ export default {
             regionHeight: 2//区域的高度
         }
       });
-    }
+    },
+    hideDqMapFn() {
+      this.showMap = 2;
+    },
+    checkFull() {
+      var isFull = document.fullscreenEnabled || window.fullScreen || document.webkitIsFullScreen || document.msFullscreenEnabled;
+      if (isFull === undefined) {isFull = false;}
+      return isFull
+    },
+    FullScreen(el){
+      if(this.isFullscreen){//退出全屏
+        if(document.exitFullscreen){
+          document.exitFullscreen()
+        }else if( document.mozCancelFullScreen){
+          document.mozCancelFullScreen()
+        }else if(document.webkitExitFullscreen){
+          //改变平面图在google浏览器上面的样式问题
+          // $("#canvasPaintArea").css("position","static").css("width","100%");
+          // $(".buildingsFloor").css("width","70%");
+          // $(".floor-plan").css("width","78%");
+          document.webkitExitFullscreen()
+        }else if(!document.msRequestFullscreen){
+          document.msExitFullscreen()
+        }
+      }else{    //进入全屏
+        if(el.requestFullscreen){
+          el.requestFullscreen()
+        }else if(el.mozRequestFullScreen){
+          el.mozRequestFullScreen()
+        }else if(el.webkitRequestFullscreen){
+          //改变平面图在google浏览器上面的样式问题
+          // $("#canvasPaintArea").css("position","absolute").css("width","94%");
+          // $(".buildingsFloor").css("width","98%");
+          // $(".floor-plan").css("width","90%");
+          el.webkitRequestFullscreen(); 
+        }else if(el.msRequestFullscreen){
+          this.isFullscreen=true;
+          el.msRequestFullscreen()            
+        }
+      }
+    },
+    toggleFullScreen(){
+      this.isFullscreen=!this.isFullscreen;
+      this.FullScreen(document.getElementById("home"));
+    },
   }
 }
 </script>
