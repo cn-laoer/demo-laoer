@@ -1,15 +1,15 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import chinaMap from '@/views/echarts/chinaMap'
+import Vue from 'vue';
+import Router from 'vue-router';
 
-Vue.use(Router)
+Vue.use(Router);
 
+import Home from '@/components/home.vue'
 export default new Router({
   routes: [
     {
       path: '/',
-      name: 'chinaMap',
-      component: chinaMap
+      name: 'home',
+      component: Home
     }
   ]
 })
