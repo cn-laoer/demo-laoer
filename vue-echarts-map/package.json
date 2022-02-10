@@ -16,7 +16,7 @@
     "axios": "0.18.0",
     "echarts": "4.1.0",
     "echarts-gl": "^1.1.1",
-    "node-sass": "^4.13.0",
+    "node-sass": "^7.0.0",
     "sass-loader": "^7.0.0",
     "scss": "^0.2.4",
     "vue": "^2.5.2",
